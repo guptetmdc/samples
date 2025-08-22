@@ -1,0 +1,63 @@
+version: v1alpha
+name: "change-events"
+layer: user
+type: lens
+tags:
+  - lens
+description: Change events capture modifications or updates made to a product, service, or platform, reflecting adjustments in configuration, content, or user actions that alter the system's state.
+lens:
+  compute: runnable-default
+  # secrets:
+  #   - name: git-secret-dj
+  #     allKeys: true
+  source:
+    type: minerva
+    name: miniature
+    catalog: icebase
+  repo:
+    url: https://github.com/guptetmdc/samples
+    lensBaseDir: samples/otis/build/semantic-model/model
+    syncFlags:
+      - --ref=main
+
+  api:
+    replicas: 1
+    logLevel: info
+    envs:
+      LENS2SQL_DB_QUERY_TIMEOUT: 300
+      LENS2SQL_AUTH_EXPIRE_SECS: 3600
+      LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+  worker:
+    replicas: 1
+    logLevel: Info
+    envs:
+      LENS2SQL_DB_QUERY_TIMEOUT: 300
+      LENS2SQL_AUTH_EXPIRE_SECS: 3600
+      LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  router:
+    logLevel: info
+    envs:
+      LENS2SQL_DB_QUERY_TIMEOUT: 300
+      LENS2SQL_AUTH_EXPIRE_SECS: 3600
+      LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi

@@ -1,0 +1,62 @@
+name: wf-change-event
+version: v1
+type: workflow
+tags:
+  - dataos:resource:workflow
+description: This job reads data from MetisDB's change_event table, applies some transformations, and writes the result to the sandbox schema in Icebase
+workflow:
+  # schedule:
+  #   cron: '0 6 * * *'
+  #   concurrencyPolicy: Forbid
+  dag:
+    - name: change-event-flare
+      description: Change Event Table transformations dag
+      spec:
+        stack: flare:6.0
+        compute: runnable-default
+        stackSpec:
+          driver:
+            coreLimit: 2000m
+            cores: 1
+            memory: 3000m
+          executor:
+            coreLimit: 2000m
+            cores: 1
+            instances: 1
+            memory: 3000m
+          job:
+            explain: true
+            logLevel: INFO
+            inputs:
+              - name: input_change_event
+                dataset: dataos://metisdb:public/change_event?acl=rw
+                options:
+                  driver: org.postgresql.Driver
+
+            steps:
+              - sequence:
+                  - name: casting_eventtime_column
+                    description: Casting eventtime column from  epoc to timestamp
+                    sql: >
+                        SELECT eventtype as event_type,
+                          entitytype entity_type,
+                          username as user_name,
+                          TO_TIMESTAMP(CAST(eventtime / 1000 AS BIGINT)) as event_time
+                        FROM input_change_event
+
+            outputs:
+              - name: casting_eventtime_column
+                dataset: dataos://icebase:sandbox/change_event?acl=rw
+                format: Iceberg
+                description: Change Event Dataset
+                options:
+                  saveMode: append
+                  iceberg:
+                    properties:
+                      write.format.default: parquet
+                      write.metadata.compression-codec: gzip
+
+          sparkConf:
+            - spark.sql.shuffle.partitions: "4"                               # fewer partitions → less shuffle overhead
+            - spark.default.parallelism: "4"                                  # match partitions for small data volumes
+            - spark.sql.broadcastTimeout: "600"

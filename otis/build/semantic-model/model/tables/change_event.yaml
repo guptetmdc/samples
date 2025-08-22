@@ -1,0 +1,44 @@
+tables:
+  - name: change_event
+    sql: {{ load_sql('change_event') }}
+    description: Table containing information about Change Events of Metis.
+    public: true
+
+    dimensions:
+      - name: metadata
+        type: string
+        sql: __metadata
+        primary_key: true
+        public: false
+        description: Unique metadata identifier for each record.
+
+      - name: event_type
+        type: string
+        sql: event_type
+        description: Type or category of the event being logged.
+
+      - name: entity_type
+        type: string
+        sql: entity_type
+        description: Type of entity involved in the event.
+
+      - name: user_name
+        type: string
+        sql: user_name
+        description: Name or identifier of the user associated with the event.
+
+      - name: event_time
+        type: time
+        sql: event_time
+        description: Timestamp when the event occurred.
+
+    measures:
+      - name: total_events
+        sql: "{TABLE.event_type}"
+        type: count_distinct
+        description: Total number of unique event types recorded.
+
+      - name: total_users
+        sql: "{TABLE.user_name}"
+        type: count_distinct
+        description: Total number of unique users who generated events.

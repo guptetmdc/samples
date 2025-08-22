@@ -1,0 +1,12 @@
+name: change-event-bundle
+version: v1beta
+type: bundle
+tags:
+  - dataproduct
+description: This bundled resource is designated for the change event data product
+layer: "user"
+bundle:
+  resources:
+    - id: lens
+      file: build/semantic-model/deployment.yaml
+      workspace: public

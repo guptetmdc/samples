@@ -1,0 +1,34 @@
+name: change-events-dp
+version: v1beta
+entity: product
+type: data
+tags:
+  - DPDomain.ChangeManagement
+  - DPUsecase.ChangeEventsTracking
+  - DPTier.Source Aligned
+description: "Provides a comprehensive view of change events, capturing modifications and updates across systems to enable data-driven insights for monitoring configuration shifts, auditing, and operational impact analysis."
+v1beta:
+  data:
+    meta:
+      title: Change Events
+      sourceCodeUrl: https://github.com/guptetmdc/samples/otis
+    collaborators:
+      - name: deepakjaiswal
+        description: owner
+
+    resource:
+      refType: dataos
+      ref: bundle:v1beta:change-event-bundle
+
+    inputs:
+      - refType: dataos
+        ref: dataset:metisdb:public:change_event
+
+    outputs:
+      - refType: dataos
+        ref: dataset:icebase:sandbox:change_event
+
+    ports:
+      lens:
+        ref: lens:v1alpha:change-events:public
+        refType: dataos

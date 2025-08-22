@@ -1,0 +1,57 @@
+name: wf-change-event-qc
+version: v1
+type: workflow
+tags:
+  - workflow
+  - soda-quality
+description: This job performs Quality checks on Change Event dataset
+workflow:
+  dag:
+    - name: soda-job-change-events
+      description: Dag to perform Quality checks on Change Event dataset
+      title: Change Events Quality Checks
+      spec:
+        stack: soda+python:1.0
+        logLevel: DEBUG
+        compute: runnable-default
+        resources:
+          requests:
+            cpu: 500m
+            memory: 250Mi
+          limits:
+            cpu: 1000m
+            memory: 500Mi
+        stackSpec:
+          inputs:
+            - dataset: dataos://icebase:sandbox/change_event
+              options:
+                engine: minerva
+                clusterName: miniature
+
+              profile:
+                columns:
+                  - '*'
+
+              checks:
+                - schema:
+                    name: Confirm that required columns are present
+                    fail:
+                      when required column missing: [event_type, entity_type, user_name, event_time]
+                    attributes:
+                      category: Schema
+
+                - freshness(event_time) < 3d:
+                    name: Check if data is older than 3 days
+                    attributes:
+                      category: Freshness
+
+                - missing_count(event_type) = 0:
+                    name:  Event Type should not be zero
+                    attributes:
+                      category: Completeness
+
+                - avg_length(user_name) > 3:
+                    name:  Average length of User name more than 3 character
+                    attributes:
+                      category: Accuracy
+

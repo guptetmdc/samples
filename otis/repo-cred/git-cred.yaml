@@ -1,0 +1,13 @@
+name: git-cred
+version: v1
+type: instance-secret
+tags:
+  - dataos:resource:instance-secret
+description: bitbucket read secrets for repos.
+layer: user
+instance-secret:
+  type: key-value
+  acl: r
+  data:
+   GITSYNC_PASSWORD: ""                                 # Use the token from your Git account
+   GITSYNC_USERNAME: ""                                 # Use your Git username 

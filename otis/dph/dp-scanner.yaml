@@ -1,0 +1,25 @@
+version: v1
+name: scan-data-products
+type: workflow
+tags:
+  - scanner
+  - data-product
+description: This scanner extracts metadata of deployed data products from Poros and registers it in Metis
+workflow:
+  dag:
+    - name: dg-scan-data-product
+      description: This job scans data products from Poros and registers the data into Metis
+      spec:
+        tags:
+          - scanner2
+        stack: scanner:2.0
+        compute: runnable-default
+        stackSpec:
+          type: data-product
+          sourceConfig:
+            config:
+              type: DataProduct
+              markDeletedDataProducts: true
+              dataProductFilterPattern:
+                includes:
+                  - change-events-dp
