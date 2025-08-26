@@ -7,9 +7,9 @@ tags:
 description: Change events capture modifications or updates made to a product, service, or platform, reflecting adjustments in configuration, content, or user actions that alter the system's state.
 lens:
   compute: runnable-default
-  # secrets:
-  #   - name: git-secret-dj
-  #     allKeys: true
+  secrets:
+    - name: git-cred
+      allKeys: true
   source:
     type: minerva
     name: miniature
@@ -29,11 +29,11 @@ lens:
       LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
     resources:
       requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
         cpu: 500m
         memory: 512Mi
-      limits:
-        cpu: 1000m
-        memory: 1024Mi
   worker:
     replicas: 1
     logLevel: Info

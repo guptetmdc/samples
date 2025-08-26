@@ -3,7 +3,7 @@ version: v1
 type: workflow
 tags:
   - dataos:resource:workflow
-description: This job reads data from MetisDB's change_event table, applies some transformations, and writes the result to the sandbox schema in Icebase
+description: This job reads data from MetisDB's change_event table, applies some transformations, and writes the result to the sandbox schema in Icebase.
 workflow:
   # schedule:
   #   cron: '0 6 * * *'

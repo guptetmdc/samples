@@ -11,7 +11,7 @@ v1beta:
   data:
     meta:
       title: Change Events
-      sourceCodeUrl: https://github.com/guptetmdc/samples/otis
+      sourceCodeUrl: https://github.com/guptetmdc/samples/tree/main/otis
     collaborators:
       - name: deepakjaiswal
         description: owner
